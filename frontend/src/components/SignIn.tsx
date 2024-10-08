@@ -9,18 +9,17 @@ import { Input } from "@/components/ui/input"
 import { getCsrf } from "@/lib/csrf"
 
 const FormSchema = z.object({
-  username: z.string().min(1, { message: "Username is required" }),
-  email: z.string().email({ message: "Must be a valid email" }),
+  usernameoremail: z.string().min(1, { message: "Username or email is required" }),
   password: z.string().min(1, { message: "Password is required" })
 })
 
-export function SignUp() {
+export function SignIn() {
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
-      email: "",
+      usernameoremail: "",
       password: ""
     },
   })
@@ -28,7 +27,7 @@ export function SignUp() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const csrf = getCsrf()
     
-    const res = fetch("/api/signup", {
+    const res = fetch("/api/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,27 +43,15 @@ export function SignUp() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
-          name="username"
+          name="usernameoremail"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Username" {...field} />
+                <Input placeholder="Username or Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
         )}/>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="password"
@@ -77,7 +64,7 @@ export function SignUp() {
             </FormItem>
           )}
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit">Sign In</Button>
       </form>
     </Form>
   )
